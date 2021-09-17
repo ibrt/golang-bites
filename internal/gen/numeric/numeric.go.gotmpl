@@ -1,0 +1,130 @@
+package {{ .Pkg }}
+
+import (
+	"sort"
+	"strconv"
+)
+
+const (
+	// BitSize is the size in bits of this type.
+	BitSize = {{ if eq .Size -1 }}32 << (^uint(0) >> 63){{ else }}{{ .Size }}{{ end }}
+)
+
+var (
+	_ sort.Interface = Slice{}
+)
+
+// Ptr returns a pointer to the value.
+func Ptr(v {{ .Type }}) *{{ .Type }} {
+	return &v
+}
+
+// PtrZeroToNil returns a pointer to the value, or nil if 0.
+func PtrZeroToNil(v {{ .Type }}) *{{ .Type }} {
+	if v == 0 {
+		return nil
+	}
+	return &v
+}
+
+// PtrDefToNil returns a pointer to the value, or nil if "def".
+func PtrDefToNil(v {{ .Type }}, def {{ .Type }}) *{{ .Type }} {
+	if v == def {
+		return nil
+	}
+	return &v
+}
+
+// Val returns the pointer value, defaulting to zero if nil.
+func Val(v *{{ .Type }}) {{ .Type }} {
+	if v == nil {
+		return 0
+	}
+	return *v
+}
+
+// ValDef returns the pointer value, defaulting to "def" if nil.
+func ValDef(v *{{ .Type }}, def {{ .Type }}) {{ .Type }} {
+	if v == nil {
+		return def
+	}
+	return *v
+}
+
+// Parse parses a string as base 10 {{ .Type }}.
+func Parse(v string) ({{ .Type }}, error) {
+	p, err := {{ .ParseCall }}
+	if err != nil {
+		return 0, err
+	}
+	return ({{ .Type }})(p), nil
+}
+
+// MustParse is like Parse but panics on error.
+func MustParse(v string) {{ .Type }} {
+	p, err := Parse(v)
+	if err != nil {
+		panic(err)
+	}
+	return p
+}
+
+// Slice is a slice of values.
+type Slice []{{ .Type }}
+
+// Len implements the sort.Interface interface.
+func (s Slice) Len() int {
+	return len(s)
+}
+
+// Less implements the sort.Interface interface.
+func (s Slice) Less(i, j int) bool {
+	return s[i] < s[j]
+}
+
+// Swap implements the sort.Interface interface.
+func (s Slice) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+// SliceToMap converts a slice to map.
+func SliceToMap(s []{{ .Type }}) map[{{ .Type }}]struct{} {
+	m := make(map[{{ .Type }}]struct{}, len(s))
+	for _, v := range s {
+		m[v] = struct{}{}
+	}
+	return m
+}
+
+// MapToSlice converts a map to slice.
+func MapToSlice(m map[{{ .Type }}]struct{}) []{{ .Type }} {
+	s := make([]{{ .Type }}, 0, len(m))
+	for v := range m {
+		s = append(s, v)
+	}
+	return s
+}
+
+// SafeIndex returns "s[i]" if possible, and 0 otherwise.
+func SafeIndex(s []{{ .Type }}, i int) {{ .Type }} {
+	if s == nil || i < 0 || i >= len(s) {
+		return 0
+	}
+	return s[i]
+}
+
+// SafeIndexDef returns "s[i]" if possible, and "def" otherwise.
+func SafeIndexDef(s []{{ .Type }}, i int, def {{ .Type }}) {{ .Type }} {
+	if s == nil || i < 0 || i >= len(s) {
+		return def
+	}
+	return s[i]
+}
+
+// SafeIndexPtr returns "s[i]" if possible, and nil otherwise.
+func SafeIndexPtr(s []{{ .Type }}, i int) *{{ .Type }} {
+	if s == nil || i < 0 || i >= len(s) {
+		return nil
+	}
+	return Ptr(s[i])
+}
