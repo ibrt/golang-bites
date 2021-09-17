@@ -23,5 +23,8 @@ jobs:
         with:
           go-version: '1.17.1'
       - name: test
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           ./test.sh
+          bash <(curl -s https://codecov.io/bash)
