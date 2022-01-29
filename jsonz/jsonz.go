@@ -1,6 +1,7 @@
 package jsonz
 
 import (
+	"bytes"
 	"encoding/json"
 )
 
@@ -20,4 +21,13 @@ func MustMarshalIndent(v interface{}, prefix, indent string) []byte {
 		panic(err)
 	}
 	return buf
+}
+
+// MustIndent is like json.Indent but panics on error.
+func MustIndent(src []byte, prefix, indent string) []byte {
+	dst := &bytes.Buffer{}
+	if err := json.Indent(dst, src, prefix, indent); err != nil {
+		panic(err)
+	}
+	return dst.Bytes()
 }
