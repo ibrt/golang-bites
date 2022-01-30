@@ -2,6 +2,7 @@ package templatez
 
 import (
 	"bytes"
+	"github.com/ibrt/golang-bites/internal"
 	htmltemplate "html/template"
 	texttemplate "text/template"
 )
@@ -24,18 +25,14 @@ func ParseAndExecuteText(template string, data interface{}) ([]byte, error) {
 // MustParseAndExecuteText is like ParseAndExecuteText but panics on error.
 func MustParseAndExecuteText(template string, data interface{}) []byte {
 	buf, err := ParseAndExecuteText(template, data)
-	if err != nil {
-		panic(err)
-	}
+	internal.MaybePanic(err)
 	return buf
 }
 
 // MustExecuteText executes a text template, panics on error.
 func MustExecuteText(template *texttemplate.Template, data interface{}) []byte {
 	buf := &bytes.Buffer{}
-	if err := template.Execute(buf, data); err != nil {
-		panic(err)
-	}
+	internal.MaybePanic(template.Execute(buf, data))
 	return buf.Bytes()
 }
 
@@ -57,17 +54,13 @@ func ParseAndExecuteHTML(template string, data interface{}) ([]byte, error) {
 // MustParseAndExecuteHTML is like ParseAndExecuteHTML but panics on error.
 func MustParseAndExecuteHTML(template string, data interface{}) []byte {
 	buf, err := ParseAndExecuteHTML(template, data)
-	if err != nil {
-		panic(err)
-	}
+	internal.MaybePanic(err)
 	return buf
 }
 
 // MustExecuteHTML executes a HTML template, panics on error.
 func MustExecuteHTML(template *htmltemplate.Template, data interface{}) []byte {
 	buf := &bytes.Buffer{}
-	if err := template.Execute(buf, data); err != nil {
-		panic(err)
-	}
+	internal.MaybePanic(template.Execute(buf, data))
 	return buf.Bytes()
 }
