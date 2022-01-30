@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"github.com/ibrt/golang-bites/internal"
 )
 
 const (
@@ -41,9 +42,7 @@ func PEMToRSAPrivateKey(buf []byte) (*rsa.PrivateKey, error) {
 // MustPEMToRSAPrivateKey is like PEMToRSAPrivateKey but panics on error.
 func MustPEMToRSAPrivateKey(buf []byte) *rsa.PrivateKey {
 	key, err := PEMToRSAPrivateKey(buf)
-	if err != nil {
-		panic(err)
-	}
+	internal.MaybePanic(err)
 	return key
 }
 
@@ -76,18 +75,14 @@ func PEMToRSAPublicKey(buf []byte) (*rsa.PublicKey, error) {
 // MustPEMToRSAPublicKey is like PEMToRSAPublicKey but panics on error.
 func MustPEMToRSAPublicKey(buf []byte) *rsa.PublicKey {
 	key, err := PEMToRSAPublicKey(buf)
-	if err != nil {
-		panic(err)
-	}
+	internal.MaybePanic(err)
 	return key
 }
 
 // RSAPrivateKeyToPEM encodes an RSA private key to PEM format.
 func RSAPrivateKeyToPEM(key *rsa.PrivateKey) []byte {
 	buf, err := x509.MarshalPKCS8PrivateKey(key)
-	if err != nil {
-		panic(err) // never happens because we already checked the key type
-	}
+	internal.MaybePanic(err) // never triggers because we already checked the key type
 
 	return pem.EncodeToMemory(&pem.Block{
 		Type:  privateKeyHeader,
@@ -98,9 +93,7 @@ func RSAPrivateKeyToPEM(key *rsa.PrivateKey) []byte {
 // RSAPublicKeyToPEM encodes a RSA public key to PEM format.
 func RSAPublicKeyToPEM(key *rsa.PublicKey) []byte {
 	buf, err := x509.MarshalPKIXPublicKey(key)
-	if err != nil {
-		panic(err) // never happens because we already checked the key type
-	}
+	internal.MaybePanic(err) // never triggers because we already checked the key type
 
 	return pem.EncodeToMemory(&pem.Block{
 		Type:  publicKeyHeader,

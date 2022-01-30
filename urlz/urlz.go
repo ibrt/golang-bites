@@ -1,15 +1,14 @@
 package urlz
 
 import (
+	"github.com/ibrt/golang-bites/internal"
 	"net/url"
 )
 
 // MustParse is like url.Parse but panics on error.
 func MustParse(rawURL string) *url.URL {
 	u, err := url.Parse(rawURL)
-	if err != nil {
-		panic(err)
-	}
+	internal.MaybePanic(err)
 	return u
 }
 
