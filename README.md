@@ -6,9 +6,10 @@
 Misc bits &amp; pieces complementing the Go standard library.
 
 - `stringz` and `numeric/*`: Type utilities for working with pointers and slices.
-- `jsonz`, `templatez`, `urlz`: `Must*` versions of commonly used functions.
+- `jsonz`, `urlz`: `Must*` versions of commonly used functions.
 - `rsaz`: Simplified conversions between PEM files and RSA keys.
 - `filez`: Shorthands for working with files and directories.
+- `templatez`: Shorthands for working with templates.
 
 ### Developers
 
