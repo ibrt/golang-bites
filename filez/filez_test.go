@@ -1,11 +1,13 @@
 package filez_test
 
 import (
-	"github.com/ibrt/golang-bites/filez"
-	"github.com/stretchr/testify/require"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/ibrt/golang-bites/filez"
 )
 
 func TestMustAbs(t *testing.T) {
@@ -34,6 +36,7 @@ func TestFilesAndDirectories(t *testing.T) {
 	require.Equal(t, []byte("temp"), filez.MustReadFile(filePath))
 
 	var tempDirPath string
+	var tempFilePath string
 
 	filez.WithMustCreateTempDir("golang-bites", func(dirPath string) {
 		tempDirPath = dirPath
@@ -48,6 +51,15 @@ func TestFilesAndDirectories(t *testing.T) {
 	})
 
 	_, err := os.Stat(tempDirPath)
+	require.Error(t, err)
+	require.True(t, os.IsNotExist(err))
+
+	filez.WithMustWriteTempFile("golang-bites", []byte("temp"), func(filePath string) {
+		tempFilePath = filePath
+		require.Equal(t, []byte("temp"), filez.MustReadFile(filePath))
+	})
+
+	_, err = os.Stat(tempFilePath)
 	require.Error(t, err)
 	require.True(t, os.IsNotExist(err))
 }

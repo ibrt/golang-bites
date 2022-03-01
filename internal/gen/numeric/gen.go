@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
+
+	"github.com/ibrt/golang-bites/internal"
 )
 
 var (
@@ -50,8 +52,8 @@ func (p *TemplateParams) ParseCall() string {
 func main() {
 	outDirPath := filepath.Join("..", "..", "..", "numeric")
 
-	must(os.RemoveAll(outDirPath))
-	must(os.MkdirAll(filepath.Join(outDirPath), 0777))
+	internal.MaybePanic(os.RemoveAll(outDirPath))
+	internal.MaybePanic(os.MkdirAll(filepath.Join(outDirPath), 0777))
 
 	for _, params := range []*TemplateParams{
 		{"int8", 8},
@@ -68,18 +70,12 @@ func main() {
 		{"float64", 64},
 	} {
 		buf := &bytes.Buffer{}
-		must(tpl.Execute(buf, params))
-		must(os.MkdirAll(filepath.Join(outDirPath, params.Pkg()), 0777))
-		must(ioutil.WriteFile(filepath.Join(outDirPath, params.Pkg(), params.Pkg()+".go"), buf.Bytes(), 0666))
+		internal.MaybePanic(tpl.Execute(buf, params))
+		internal.MaybePanic(os.MkdirAll(filepath.Join(outDirPath, params.Pkg()), 0777))
+		internal.MaybePanic(ioutil.WriteFile(filepath.Join(outDirPath, params.Pkg(), params.Pkg()+".go"), buf.Bytes(), 0666))
 
 		buf.Reset()
-		must(testTpl.Execute(buf, params))
-		must(ioutil.WriteFile(filepath.Join(outDirPath, params.Pkg(), params.Pkg()+"_test.go"), buf.Bytes(), 0666))
-	}
-}
-
-func must(err error) {
-	if err != nil {
-		panic(err)
+		internal.MaybePanic(testTpl.Execute(buf, params))
+		internal.MaybePanic(ioutil.WriteFile(filepath.Join(outDirPath, params.Pkg(), params.Pkg()+"_test.go"), buf.Bytes(), 0666))
 	}
 }

@@ -2,11 +2,12 @@ package filez
 
 import (
 	"bytes"
-	"github.com/ibrt/golang-bites/internal"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/ibrt/golang-bites/internal"
 )
 
 // MustAbs is like filepath.Abs, but panics on error.
@@ -55,6 +56,16 @@ func MustWriteTempFile(pattern string, contents []byte) string {
 	_, err = io.Copy(fd, bytes.NewReader(contents))
 	internal.MaybePanic(err)
 	return fd.Name()
+}
+
+// WithMustWriteTempFile calls f passing it the path to a new temporary file, which is wiped after f returns.
+func WithMustWriteTempFile(pattern string, contents []byte, f func(filePath string)) {
+	filePath := MustWriteTempFile(pattern, contents)
+	defer func() {
+		internal.MaybePanic(os.RemoveAll(filePath))
+	}()
+
+	f(filePath)
 }
 
 // MustPrepareDir deletes the given directory and its contents (if present) and recreates it.
