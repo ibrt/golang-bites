@@ -13,7 +13,7 @@ func Ptr(v string) *string {
 	return &v
 }
 
-// PtrZeroToNil returns a pointer to the value, or nil if 0.
+// PtrZeroToNil returns a pointer to the value, or nil if "".
 func PtrZeroToNil(v string) *string {
 	if v == "" {
 		return nil
@@ -29,7 +29,7 @@ func PtrDefToNil(v string, def string) *string {
 	return &v
 }
 
-// Val returns the pointer value, defaulting to zero if nil.
+// Val returns the pointer value, defaulting to "" if nil.
 func Val(v *string) string {
 	if v == nil {
 		return ""
