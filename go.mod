@@ -3,6 +3,8 @@ module github.com/ibrt/golang-bites
 go 1.17
 
 require (
+	github.com/gobuffalo/flect v0.2.4
+	github.com/iancoleman/strcase v0.2.0
 	github.com/stretchr/testify v1.7.0
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 )

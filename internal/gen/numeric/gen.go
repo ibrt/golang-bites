@@ -15,13 +15,13 @@ import (
 
 var (
 	//go:embed numeric.go.gotmpl
-	numericGoTemplate string
+	numericGoTemplateAsset string
 
 	//go:embed numeric_test.go.gotmpl
-	numericTestGoTemplate string
+	numericTestGoTemplateAsset string
 
-	tpl     = template.Must(template.New("").Parse(numericGoTemplate))
-	testTpl = template.Must(template.New("").Parse(numericTestGoTemplate))
+	tpl     = template.Must(template.New("").Parse(numericGoTemplateAsset))
+	testTpl = template.Must(template.New("").Parse(numericTestGoTemplateAsset))
 )
 
 // TemplateParams describes the template parameters.

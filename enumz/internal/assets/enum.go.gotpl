@@ -1,0 +1,34 @@
+{{- /*gotype: github.com/ibrt/golang-bites/enumz.fullEnumSpec*/ -}}
+
+package {{ .PackageName }}
+
+// {{ .EnumSpec.EnumNameSingular }} describes the {{ .EnumSpec.EnumNameInComments }} enum.
+type {{ .EnumSpec.EnumNameSingular }} string
+
+// String implements the fmt.Stringer interface.
+func (v {{ .EnumSpec.EnumNameSingular }}) String() string {
+	return string(v)
+}
+
+// Valid validates the enum.
+func (v {{ .EnumSpec.EnumNameSingular }}) Valid() bool {
+	switch v {
+	case
+		{{- range $i, $value := .EnumSpec.Values }}{{ if not (eq $i 0) }},{{ end }}{{ "\n\t\t" }}{{ $.EnumSpec.EnumNameSingular }}{{ $value.Name }}{{ end }}:
+		return true
+	default:
+		return false
+	}
+}
+
+// Known enum values.
+const (
+	{{- range .EnumSpec.Values }}{{ "\n\t" }}{{ $.EnumSpec.EnumNameSingular }}{{ .Name }} {{ $.EnumSpec.EnumNameSingular }} = "{{ .Value }}"{{ end }}
+)
+
+// {{ .EnumSpec.EnumNamePlural }} lists the known enum values.
+var (
+	{{ .EnumSpec.EnumNamePlural }} = []{{.EnumSpec.EnumNameSingular}}{
+		{{- range .Values }}{{ "\n\t\t" }}{{ $.EnumSpec.EnumNameSingular }}{{ .Name }},{{ end }}
+	}
+)

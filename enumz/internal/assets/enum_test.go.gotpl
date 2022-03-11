@@ -1,0 +1,26 @@
+{{- /*gotype: github.com/ibrt/golang-bites/enumz.fullEnumSpec*/ -}}
+
+package {{ .PackageName }}_test
+
+
+import (
+	"testing"
+
+	"github.com/ibrt/golang-bites/enumz/internal/testing/{{ .PackageName }}"
+
+	"github.com/stretchr/testify/require"
+)
+
+func Test{{ .EnumSpec.EnumNameSingular }}(t *testing.T) {
+	{{ range .EnumSpec.Values -}}
+		require.Equal(t, "{{ .Value }}", {{ $.PackageName }}.{{ $.EnumSpec.EnumNameSingular }}{{ .Name }}.String())
+	{{ end }}
+
+	{{ range .EnumSpec.Values -}}
+		require.True(t, {{ $.PackageName }}.{{ $.EnumSpec.EnumNameSingular }}{{ .Name }}.Valid())
+	{{ end -}}
+
+	{{ range .EnumSpec.Values -}}
+		require.False(t, {{ $.PackageName }}.{{ $.EnumSpec.EnumNameSingular }}("").Valid())
+	{{ end -}}
+}
