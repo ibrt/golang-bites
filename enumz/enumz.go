@@ -14,14 +14,6 @@ import (
 	"github.com/ibrt/golang-bites/templatez"
 )
 
-var (
-	//go:embed internal/assets/enum.go.gotpl
-	enumGoTemplateAsset string
-
-	//go:embed internal/assets/enum_test.go.gotpl
-	enumTestGoTemplateAsset string
-)
-
 // EnumSpec describes the specification for a generated enum.
 type EnumSpec struct {
 	EnumNamePlural     string
@@ -82,7 +74,7 @@ func MustGenerateEnums(outDirPath string, wipe bool, packageName string, specs [
 		filez.MustWriteFile(
 			filepath.Join(outDirPath, strings.TrimSuffix(spec.FileName, ".go")+".go"),
 			0777, 0666,
-			templatez.MustParseAndExecuteGo(enumGoTemplateAsset, &fullEnumSpec{
+			templatez.MustParseAndExecuteGo(internal.EnumGoTemplateAsset, &fullEnumSpec{
 				PackageName: packageName,
 				EnumSpec:    spec,
 			}))
@@ -90,7 +82,7 @@ func MustGenerateEnums(outDirPath string, wipe bool, packageName string, specs [
 		filez.MustWriteFile(
 			filepath.Join(outDirPath, strings.TrimSuffix(spec.FileName, ".go")+"_test.go"),
 			0777, 0666,
-			templatez.MustParseAndExecuteGo(enumTestGoTemplateAsset, &fullEnumSpec{
+			templatez.MustParseAndExecuteGo(internal.EnumTestGoTemplateAsset, &fullEnumSpec{
 				PackageName: packageName,
 				EnumSpec:    spec,
 			}))
