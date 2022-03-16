@@ -90,3 +90,15 @@ func WithMustCreateTempDir(pattern string, f func(dirPath string)) {
 
 	f(dirPath)
 }
+
+// MustCheckExists checks if the given path exists, panics on error (other than os.ErrNotExist).
+func MustCheckExists(fileOrDirPath string) bool {
+	_, err := os.Stat(fileOrDirPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+		panic(err)
+	}
+	return true
+}

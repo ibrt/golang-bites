@@ -63,3 +63,21 @@ func TestFilesAndDirectories(t *testing.T) {
 	require.Error(t, err)
 	require.True(t, os.IsNotExist(err))
 }
+
+func TestMustCheckExists(t *testing.T) {
+	filez.WithMustCreateTempDir("golang-bites", func(dirPath string) {
+		require.True(t, filez.MustCheckExists(dirPath))
+	})
+
+	var deletedFilePath string
+	filez.WithMustWriteTempFile("golang-bites", []byte("temp"), func(filePath string) {
+		require.True(t, filez.MustCheckExists(filePath))
+		deletedFilePath = filePath
+	})
+
+	require.False(t, filez.MustCheckExists(deletedFilePath))
+
+	require.Panics(t, func() {
+		filez.MustCheckExists(string([]byte{0}))
+	})
+}
