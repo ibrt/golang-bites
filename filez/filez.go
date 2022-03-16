@@ -2,10 +2,14 @@ package filez
 
 import (
 	"bytes"
+	"embed"
+	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/ibrt/golang-bites/internal"
 )
@@ -101,4 +105,29 @@ func MustCheckExists(fileOrDirPath string) bool {
 		panic(err)
 	}
 	return true
+}
+
+// MustCopyEmbedFSSimple copies regular files and directories from embed.FS to disk.
+// Note that the copy logic is very simple and only suited for small tasks such as preparing a templated directory.
+func MustCopyEmbedFSSimple(src embed.FS, root string, outDirPath string) {
+	internal.MaybePanic(fs.WalkDir(src, root, func(path string, d fs.DirEntry, err error) error {
+		internal.MaybePanic(err)
+
+		newPath := fmt.Sprintf("%v%c%v",
+			outDirPath,
+			filepath.Separator,
+			strings.Trim(strings.TrimPrefix(path, root), string(filepath.Separator)))
+
+		if d.Type().IsRegular() {
+			buf, err := src.ReadFile(path)
+			internal.MaybePanic(err)
+			MustWriteFile(newPath, 0777, 0666, buf)
+		}
+
+		if d.Type().IsDir() {
+			internal.MaybePanic(os.MkdirAll(newPath, 0777))
+		}
+
+		return nil
+	}))
 }

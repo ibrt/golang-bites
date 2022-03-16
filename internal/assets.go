@@ -1,7 +1,12 @@
 package internal
 
 import (
-	_ "embed" // embed
+	"embed"
+)
+
+const (
+	// ExampleDirPathPrefix is the path prefix for ExampleDirAssetFS.
+	ExampleDirPathPrefix = "assets/example-dir"
 )
 
 // Embedded assets.
@@ -17,4 +22,7 @@ var (
 
 	//go:embed assets/numeric_test.go.gotmpl
 	NumericTestGoTemplateAsset string
+
+	//go:embed assets/example-dir
+	ExampleDirAssetFS embed.FS
 )

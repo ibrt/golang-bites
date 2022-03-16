@@ -1,13 +1,16 @@
 package filez_test
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"github.com/ibrt/golang-bites/filez"
+	"github.com/ibrt/golang-bites/internal"
 )
 
 func TestMustAbs(t *testing.T) {
@@ -79,5 +82,22 @@ func TestMustCheckExists(t *testing.T) {
 
 	require.Panics(t, func() {
 		filez.MustCheckExists(string([]byte{0}))
+	})
+}
+
+func TestMustCopyEmbedFSSimple(t *testing.T) {
+	filez.WithMustCreateTempDir("golang-bites", func(dirPath string) {
+		filez.MustCopyEmbedFSSimple(internal.ExampleDirAssetFS, internal.ExampleDirPathPrefix, dirPath)
+
+		paths := make([]string, 0)
+		require.NoError(t, filepath.WalkDir(dirPath, func(path string, _ fs.DirEntry, err error) error {
+			require.NoError(t, err)
+			paths = append(paths, strings.TrimPrefix(path, dirPath))
+			return nil
+		}))
+
+		require.Equal(t, []string{"", "/child-dir", "/child-dir/second.txt", "/first.txt"}, paths)
+		require.Equal(t, []byte("FIRST"), filez.MustReadFile(filepath.Join(dirPath, "first.txt")))
+		require.Equal(t, []byte("SECOND"), filez.MustReadFile(filepath.Join(dirPath, "child-dir", "second.txt")))
 	})
 }
