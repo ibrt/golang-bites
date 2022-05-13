@@ -8,6 +8,18 @@ func (v Frequency) String() string {
 	return string(v)
 }
 
+// Label returns the enum value label.
+func (v Frequency) Label() string {
+	switch v {
+	case FrequencySingle:
+		return "Single"
+	case FrequencyMulti:
+		return "Multi"
+	default:
+		return ""
+	}
+}
+
 // Valid validates the enum.
 func (v Frequency) Valid() bool {
 	switch v {

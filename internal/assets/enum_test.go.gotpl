@@ -15,6 +15,10 @@ func Test{{ .EnumSpec.EnumNameSingular }}(t *testing.T) {
 	{{ end }}
 
 	{{ range .EnumSpec.Values -}}
+		require.Equal(t, "{{ .Label }}", {{ $.EnumSpec.EnumNameSingular }}{{ .Name }}.Label())
+	{{ end }}
+
+	{{ range .EnumSpec.Values -}}
 		require.True(t, {{ $.EnumSpec.EnumNameSingular }}{{ .Name }}.Valid())
 	{{ end -}}
 

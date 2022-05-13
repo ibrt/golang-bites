@@ -27,6 +27,7 @@ type EnumSpec struct {
 type EnumSpecValue struct {
 	Name  string
 	Value string
+	Label string
 }
 
 type fullEnumSpec struct {
@@ -54,6 +55,7 @@ func ProcessSimpleEnumSpecs(simpleSpecs map[string][]string) []*EnumSpec {
 			specs[len(specs)-1].Values[i] = &EnumSpecValue{
 				Name:  value,
 				Value: strcase.ToSnake(value),
+				Label: value,
 			}
 		}
 

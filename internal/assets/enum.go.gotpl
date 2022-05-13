@@ -10,6 +10,15 @@ func (v {{ .EnumSpec.EnumNameSingular }}) String() string {
 	return string(v)
 }
 
+// Label returns the enum value label.
+func (v {{ .EnumSpec.EnumNameSingular }}) Label() string {
+	switch v {
+		{{- range $i, $value := .EnumSpec.Values }}{{ "\n" }}case {{ $.EnumSpec.EnumNameSingular }}{{ $value.Name }}:{{ "\n" }}return "{{ $value.Label }}"{{ end }}
+		default:
+			return ""
+	}
+}
+
 // Valid validates the enum.
 func (v {{ .EnumSpec.EnumNameSingular }}) Valid() bool {
 	switch v {
