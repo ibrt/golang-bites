@@ -22,7 +22,7 @@ func TestEnumz(t *testing.T) {
 		},
 	})
 
-	require.Equal(t, []*enumz.EnumSpec{
+	require.EqualValues(t, []*enumz.EnumSpec{
 		{
 			EnumNamePlural:     "OutputModes",
 			EnumNameSingular:   "OutputMode",
