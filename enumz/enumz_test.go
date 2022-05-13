@@ -32,14 +32,17 @@ func TestEnumz(t *testing.T) {
 				{
 					Name:  "Batched",
 					Value: "batched",
+					Label: "Batched",
 				},
 				{
 					Name:  "Streaming",
 					Value: "streaming",
+					Label: "Streaming",
 				},
 				{
 					Name:  "BatchedStreaming",
 					Value: "batched_streaming",
+					Label: "BatchedStreaming",
 				},
 			},
 		},
@@ -52,10 +55,12 @@ func TestEnumz(t *testing.T) {
 				{
 					Name:  "Single",
 					Value: "single",
+					Label: "Single",
 				},
 				{
 					Name:  "Multi",
 					Value: "multi",
+					Label: "Multi",
 				},
 			},
 		},
